@@ -1,0 +1,20 @@
+# secrets and config
+.env
+*.env
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# data
+corpus/
+
+#local stuff
+*.log
+.DS_Store
+.vscode/
+
+# To push later
+deployment.yaml
+decisions.md

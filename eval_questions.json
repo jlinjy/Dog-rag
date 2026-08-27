@@ -1,0 +1,16 @@
+[
+  {"id": "q1", "question": "Compare a maltese and a pomeranian", "type": "multi-hop", "expected_breeds": ["maltese", "pomeranian"], "key_facts": ["small", "coat", "companion"]},
+  {"id": "q2", "question": "Why are police dogs commonly German Shepherds?", "type": "aggregation", "expected_breeds": ["german_shepherd"], "key_facts": ["intelligen", "working", "obedien"]},
+  {"id": "q3", "question": "There are multiple sizes of poodles, what are the similarities and differences among them?", "type": "disambiguation", "expected_breeds": ["poodle"], "key_facts": ["standard", "miniature", "toy"]},
+  {"id": "q4", "question": "What's the difference between a golden retriever and a labrador retriever?", "type": "disambiguation", "expected_breeds": ["golden_retriever", "labrador_retriever"], "key_facts": ["coat", "retriev"]},
+  {"id": "q5", "question": "What traits make a dog breed suitable for apartments?", "type": "aggregation", "expected_breeds": [], "key_facts": ["quiet", "exercise"]},
+  {"id": "q6", "question": "What makes some breeds suitable as working dogs?", "type": "aggregation", "expected_breeds": [], "key_facts": ["prey drive", "train", "strong"]},
+  {"id": "q7", "question": "Are border collies good family dogs for young children?", "type": "conditional", "expected_breeds": ["border_collie"], "key_facts": ["herding", "energ"]},
+  {"id": "q8", "question": "What traits make a breed suitable for a first-time owner, and which breeds does the corpus describe as having them?", "type": "aggregation", "expected_breeds": [], "key_facts": ["train", "temperament"]},
+  {"id": "q9", "question": "Why are boxers stereotyped as aggressive?", "type": "grounding", "expected_breeds": ["boxer"], "key_facts": []},
+  {"id": "q10", "question": "What traits make a breed get along with other animals and pets?", "type": "aggregation", "expected_breeds": [], "key_facts": ["temperament", "social"]},
+  {"id": "q11", "question": "Which is better suited to a hot climate, a Siberian Husky or a Chihuahua?", "type": "multi-hop", "expected_breeds": ["siberian_husky", "chihuahua"], "key_facts": ["coat", "exercise"]},
+  {"id": "c1", "question": "What size is a Maltese?", "type": "control", "expected_breeds": ["maltese"], "key_facts": ["3–4 kg"]},
+  {"id": "c2", "question": "What group does the border collie belong to?", "type": "control", "expected_breeds": ["border_collie"], "key_facts": ["herding"]},
+  {"id": "c3", "question": "What country did the Shiba Inu originate from?", "type": "control", "expected_breeds": ["shiba_inu"], "key_facts": ["japan"]}
+]
