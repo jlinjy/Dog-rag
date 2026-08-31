@@ -41,6 +41,7 @@ Pygments
 python-dateutil
 python-dotenv
 python-multipart
+pytest
 PyYAML
 regex
 rich
@@ -70,3 +71,4 @@ uvicorn
 uvloop
 websockets
 Wikipedia-API
+

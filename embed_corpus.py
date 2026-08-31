@@ -1,5 +1,3 @@
-
-import re
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -7,6 +5,7 @@ from dotenv import load_dotenv
 import psycopg2
 from pgvector.psycopg2 import register_vector
 from sentence_transformers import SentenceTransformer
+from text_utils import chunk_text, clean_article
 
 # --- config ---
 # DB_HOST = "localhost"
@@ -26,34 +25,8 @@ CORPUS_DIR = Path("corpus")
 MODEL_NAME = "all-MiniLM-L6-v2"
 CHUNK_SIZE = 200
 CHUNK_OVERLAP = 40
-STOP_SECTIONS = ["References", "See also", "External links", "Notes", "Citations"]
 # --- end config ---
 
-def clean_article(text: str) -> str:
-    """Drop reference/citation tail, matching '== References ==' style headers,
-    but only when they appear in the back half of the article."""
-    lines = text.splitlines()
-    n = len(lines)
-    for i, line in enumerate(lines):
-        header = line.strip().strip("=").strip()
-        if header in STOP_SECTIONS and i > n * 0.5:
-            return "\n".join(lines[:i])
-    return text
-
-
-def chunk_text(text, chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP):
-    """Split text into chunks of specified size with overlap."""
-    words = text.split()
-    if not words:
-        return []
-    chunks, start = [], 0
-    step = chunk_size - chunk_overlap
-    while start < len(words):
-        chunk = " ".join(words[start: start + chunk_size]).strip()
-        if len(chunk) > 50:
-            chunks.append(chunk)
-        start += step
-    return chunks
 
 def main():
     # postgres db connection
