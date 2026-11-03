@@ -1,11 +1,11 @@
 """
-build_corpus.py — fetch Wikipedia articles for dog breeds listed in a CSV.
+scrape_corpus.py — fetch Wikipedia articles for dog breeds listed in a CSV.
 
 Setup (once):
     pip install wikipedia-api pandas
 
 Run:
-    python build_corpus.py
+    python scrape_corpus.py
 
 Output:
     corpus/<breed_slug>.txt      one cleaned article per breed
