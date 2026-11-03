@@ -73,6 +73,19 @@ def build_prompt(query: str, chunks: list[tuple[str, str]]):
       "Answer:" 
   )
 
+
+def generate(query, chunks): 
+  # New function separated out for timing
+  prompt = build_prompt(query, chunks)
+  response = ollama_client.chat(model=LLM_MODEL, messages=[
+    {
+      'role': 'user',
+      'content': prompt,
+    },
+  ])
+  return response['message']['content']
+
+
 def answer(query: str):
   chunks = query_decomposition(query)
   prompt = build_prompt(query, chunks)

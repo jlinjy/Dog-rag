@@ -28,6 +28,14 @@ services:
          test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       ports:
          - "5432:5432" # reachable from host too
+   prometheus:
+      image: prom/prometheus:latest
+      ports:
+         - "9090:9090"
+      volumes:
+         - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      depends_on:
+         - web
 volumes:
    pgdata:
    

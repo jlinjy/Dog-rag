@@ -1,11 +1,15 @@
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_client import Histogram
 import logging
-from rag import answer
-
+import time
+from rag import answer, retrieve, generate
 
 app = FastAPI()
 
 logger = logging.getLogger("uvicorn.error")
+RETRIEVAL_TIME = Histogram("rag_retrieval_seconds", "Time spent on retrieval")
+GENERATION_TIME = Histogram("rag_generation_seconds", "Time spent on generation")
 
 @app.get("/")
 def read_root():
@@ -17,6 +21,19 @@ def read_root():
 
 @app.post("/ask")
 def ask(user_query: str):
-    rag_reply = answer(user_query)
-    logger.info(rag_reply)
-    return {"reply": rag_reply['reply'], "sources": rag_reply['sources']}
+    t0 = time.time()
+    chunks = retrieve(user_query)
+    RETRIEVAL_TIME.observe(time.time()-t0)
+
+    t1 = time.time()
+    rag_reply = generate(user_query, chunks)
+    GENERATION_TIME.observe(time.time() - t1)
+
+    sources = list(dict.fromkeys(b for b, _ in chunks))
+    #rag_reply = answer(user_query)
+    #logger.info(rag_reply)
+    #return {"reply": rag_reply['reply'], "sources": rag_reply['sources']}
+    return {"reply": rag_reply, "sources": sources}
+
+
+Instrumentator().instrument(app).expose(app)

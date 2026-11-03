@@ -32,6 +32,7 @@ ollama
 packaging
 pandas
 pgvector
+prometheus-fastapi-instrumentator
 psycopg2-binary
 pydantic
 pydantic-extra-types
