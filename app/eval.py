@@ -2,6 +2,7 @@ import json
 import os
 from rag import query_decomposition, build_prompt, LLM_MODEL
 from ollama import Client
+from eval_llm import llm_judge
 
 ollama_client = Client(host=os.environ.get("OLLAMA-HOST", "http://localhost:11434"))
 
@@ -44,16 +45,21 @@ def run_eval(path, k=4):
         answer_text = resp["message"]["content"]
         f_score = eval_facts(q["key_facts"], answer_text)
 
+        llm_score, llm_reason = llm_judge(q, answer_text, q["key_facts"])
+        #print(llm_score)
+
         results.append({"id": q["id"], "type": q["type"],
                         "retrieval": r_score, "facts": f_score,
-                        "expected": q["expected_breeds"], "retrieved": retrieved
+                        "expected": q["expected_breeds"], "retrieved": retrieved,
+                        "llm_eval_score": llm_score,  
+                        "llm_eval_reason": llm_reason, 
                         })
-        print(f"[{q["id"]}] {q["type"]} retrieval={r_score}, facts={f_score}")
+        #print(f"[{q["id"]}] {q["type"]} retrieval={r_score}, facts={f_score}")
         # print(f"answer_text: {answer_text}")
-        print(f"Expected breeds: {q["expected_breeds"]}, retrieved: {retrieved}")
+        #print(f"Expected breeds: {q["expected_breeds"]}, retrieved: {retrieved}")
     return results
 
 if __name__ == "__main__":
     #for k in (4, 10):
     #    print(f"\n===== top_k={k} =====")
-    run_eval(path="eval_questions.json",k=4)
+    print(run_eval(path="eval_questions.json",k=4))
