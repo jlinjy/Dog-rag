@@ -1,0 +1,236 @@
+{
+  "summary": {
+    "n": 16,
+    "routing_accuracy": 0.9375,
+    "hit_limit_rate": 0.0,
+    "avg_extra_calls": 0.0625,
+    "avg_latency_s": 6.414375
+  },
+  "results": [
+    {
+      "id": "a1",
+      "question": "Which dog breeds come from Germany?",
+      "expected_tool": "breed_database",
+      "route": "breed_database",
+      "route_correct": true,
+      "tools_used": [
+        "breed_database"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 6.77,
+      "answer": "The dog breeds that come from Germany are:\n\n1. German Shepherd\n2. Boxer\n3. Rottweiler\n4. Dachshund\n5. Pomeranian\n6. Great Dane\n7. Doberman Pinscher\n8. Weimaraner\n9. Affenpinscher\n10. Miniature Schnauzer\n11. Standard Schnauzer\n12. Giant Schnauzer\n13. Miniature Pinscher"
+    },
+    {
+      "id": "a2",
+      "question": "Which breeds commonly have hip dysplasia?",
+      "expected_tool": "breed_database",
+      "route": "breed_database",
+      "route_correct": true,
+      "tools_used": [
+        "breed_database"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 12.69,
+      "answer": "The breeds commonly associated with hip dysplasia are:\n\n* Labrador Retriever\n* German Shepherd\n* Poodle\n* Beagle\n* Boxer\n* Golden Retriever\n* Rottweiler\n* Siberian Husky\n* Dachshund\n* Australian Shepherd\n* Cocker Spaniel\n* French Bulldog\n* Great Dane\n* Mastiff\n* Newfoundland\n* Saint Bernard\n* Old English Sheepdog\n* Irish Wolfhound\n* Greyhound\n* Scottish Deerhound\n* Great Pyrenees\n* Shar Pei\n* Doberman Pinscher\n* Weimaraner\n* Belgian Malinois\n* Rhodesian Ridgeback\n* English Setter\n* Pointer\n* Gordon Setter\n* Irish Setter\n* Toy Poodle\n* Miniature Poodle\n* Standard Poodle\n* West Highland White Terrier\n* Australian Terrier\n* Border Terrier\n* Coton de Tulear\n* English Toy Spaniel\n* American Eskimo Dog\n* Australian Cattle Dog"
+    },
+    {
+      "id": "a3",
+      "question": "What breeds are known for being loyal?",
+      "expected_tool": "breed_database",
+      "route": "breed_articles",
+      "route_correct": false,
+      "tools_used": [
+        "breed_articles"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 3.89,
+      "answer": "According to the provided context, the Boxer (Source 2) and the Cardigan Welsh Corgi (Source 4) are mentioned as breeds that are known for their loyalty. Additionally, the Africanis is also mentioned as displaying watchful, territorial behavior, which can be interpreted as loyalty to its territory and family.\n\n[article sources: africanis, boxer, golden_retriever, cardigan_welsh_corgi]"
+    },
+    {
+      "id": "a4",
+      "question": "How many breeds come from England?",
+      "expected_tool": "breed_database",
+      "route": "breed_database",
+      "route_correct": true,
+      "tools_used": [
+        "breed_database"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 1.89,
+      "answer": "There are 21 breeds that originated from England."
+    },
+    {
+      "id": "a5",
+      "question": "How long does a beagle live?",
+      "expected_tool": "breed_database",
+      "route": "breed_database",
+      "route_correct": true,
+      "tools_used": [
+        "breed_database"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 4.15,
+      "answer": "Beagles typically live for 12 to 15 years."
+    },
+    {
+      "id": "a6",
+      "question": "What is the tallest breed?",
+      "expected_tool": "breed_database",
+      "route": "breed_database",
+      "route_correct": true,
+      "tools_used": [
+        "breed_database"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 4.23,
+      "answer": "The tallest breed is the Irish Wolfhound, with a maximum height of 35 inches."
+    },
+    {
+      "id": "a7",
+      "question": "What colour eyes does a Weimaraner have?",
+      "expected_tool": "breed_database",
+      "route": "breed_database",
+      "route_correct": true,
+      "tools_used": [
+        "breed_database",
+        "breed_database"
+      ],
+      "extra_calls": 1,
+      "hit_limit": false,
+      "latency_s": 5.44,
+      "answer": "Weimaraners have blue or grey eyes."
+    },
+    {
+      "id": "a8",
+      "question": "Compare the height and lifespan of a maltese and a pomeranian",
+      "expected_tool": "breed_database",
+      "route": "breed_database",
+      "route_correct": true,
+      "tools_used": [
+        "breed_database"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 6.98,
+      "answer": "The Maltese typically reaches a height of 8-10 inches, while the Pomeranian reaches a height of 6-7 inches. The Maltese has a lifespan of 12-15 years, while the Pomeranian has a lifespan of 12-16 years."
+    },
+    {
+      "id": "a9",
+      "question": "Which breed lives the longest?",
+      "expected_tool": "breed_database",
+      "route": "breed_database",
+      "route_correct": true,
+      "tools_used": [
+        "breed_database"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 4.56,
+      "answer": "The Chihuahua is the breed that lives the longest, with a maximum lifespan of 20 years."
+    },
+    {
+      "id": "a10",
+      "question": "Why are German Shepherds used as police dogs?",
+      "expected_tool": "breed_articles",
+      "route": "breed_articles",
+      "route_correct": true,
+      "tools_used": [
+        "breed_articles"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 7.12,
+      "answer": "According to the context, German Shepherds are used as police dogs because of their aggression and defensive behavior, which makes them well-suited for police work. This is mentioned in the experiment in temperament testing of Labrador Retrievers and German Shepherds, which showed that German Shepherds were superior in aggression and defensive behavior, suggesting they are more suited to police work (Source 2).\n\nSource: German Shepherd\n\n[article sources: german_shepherd]"
+    },
+    {
+      "id": "a11",
+      "question": "What was the Dalmatian originally bred for?",
+      "expected_tool": "breed_articles",
+      "route": "breed_articles",
+      "route_correct": true,
+      "tools_used": [
+        "breed_articles"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 3.2,
+      "answer": "I don't have enough information to answer this question. The provided context includes information about the Mastiff, Australian Kelpie, Pekingese, and Whippet breeds, but it does not mention the Dalmatian.\n\n[article sources: mastiff, australian_kelpie, pekingese, whippet]"
+    },
+    {
+      "id": "a12",
+      "question": "Is a golden retriever good with kids?",
+      "expected_tool": "breed_articles",
+      "route": "breed_articles",
+      "route_correct": true,
+      "tools_used": [
+        "breed_articles"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 3.16,
+      "answer": "According to the context, Golden Retrievers are generally extremely tolerant of children and are known to make excellent pets and family dogs. They are often completely devoid of guarding instincts, making them a great breed for families with kids.\n\n[article sources: golden_retriever]"
+    },
+    {
+      "id": "a13",
+      "question": "What is the history of the Siberian Husky?",
+      "expected_tool": "breed_articles",
+      "route": "breed_articles",
+      "route_correct": true,
+      "tools_used": [
+        "breed_articles"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 11.99,
+      "answer": "The Siberian Husky breed has a rich and complex history. According to the breed's origins, they were developed by the Chukchi people of the Chukchi Peninsula in eastern Siberia for sled pulling and companionship. The breed was introduced to Nome, Alaska in 1908 by William Goosak, a Russian fur trader, and were initially used as working sled dogs.\n\nLater, in 2015, a DNA study revealed that Siberian Huskies are closely related to Alaskan Malamutes and Alaskan Huskies, and share a genetic connection with Chukotka sled dogs from Siberia. They also show a genetic affinity with historical East Siberian dogs and ancient Lake Baikal dogs.\n\nThe breed's history is further documented by its use in various military and scientific expeditions, including Operation Highjump, a historic trek around the 16th,000-mile coast of Antarctica in the 1940s, and its participation in the US Army's Arctic Search and Rescue Unit during World War II.\n\nToday, the Siberian Husky is primarily kept as a house pet, although they are still used as sled dogs by competitive and recreational mushers.\n\nSources:\n- Source 1: Siberian Husky\n- Source 2: Siberian Husky\n- Source 3: Siberian Husky\n- Source 4: Siberian Husky\n\n[article sources: siberian_husky]"
+    },
+    {
+      "id": "a14",
+      "question": "How much exercise does a border collie need?",
+      "expected_tool": "breed_articles",
+      "route": "breed_articles",
+      "route_correct": true,
+      "tools_used": [
+        "breed_articles"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 12.27,
+      "answer": "According to the context, Border Collies require a significant amount of exercise, which is essential for their physical and mental well-being. The exact amount of exercise needed can vary, but it's mentioned that an unexercised Water Spaniel (another breed, not directly related to Border Collies) may become \"naughty, mischievous\" and that an ideal home for an Irish Water Spaniel is a working environment where the dog's mind and body are exercised.\n\nHowever, there is no specific information on the exercise needs of Border Collies in the provided context. The text does mention that Border Collies excel in dog activities like flyball, disc dog competitions, and agility, but it doesn't provide a specific amount of exercise required.\n\nFor more information, you may need to consult additional sources or experts on the breed.\n\n[article sources: border_collie, irish_water_spaniel]"
+    },
+    {
+      "id": "a15",
+      "question": "What was the Saint Bernard famous for in the Alps?",
+      "expected_tool": "breed_articles",
+      "route": "breed_articles",
+      "route_correct": true,
+      "tools_used": [
+        "breed_articles"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 7.75,
+      "answer": "According to the context, the Saint Bernard was famous for its role in Alpine rescues. Specifically, it was bred for rescue work by the hospice of the Great St. Bernard Pass on the Italian-Swiss border, and was used to save people stranded in the Alps.\n\n[article sources: saint_bernard]"
+    },
+    {
+      "id": "a16",
+      "question": "How should I groom a poodle?",
+      "expected_tool": "breed_articles",
+      "route": "breed_articles",
+      "route_correct": true,
+      "tools_used": [
+        "breed_articles"
+      ],
+      "extra_calls": 0,
+      "hit_limit": false,
+      "latency_s": 6.54,
+      "answer": "According to the context, a pet owner can anticipate grooming a Poodle every four to eight weeks.\n\n[article sources: poodle, standard_poodle, miniature_poodle, toy_poodle]"
+    }
+  ]
+}

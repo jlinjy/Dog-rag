@@ -1,0 +1,20 @@
+# Envoy Gateway normally gives the gateway a LoadBalancer Service. kind has no
+# load balancer, so run it as a NodePort on 30080, which kind maps to localhost:80.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: kind-nodeport
+  namespace: envoy-gateway-system
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        type: NodePort
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              ports:
+                - port: 80
+                  nodePort: 30080

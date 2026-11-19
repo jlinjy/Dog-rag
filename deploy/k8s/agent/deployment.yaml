@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dog-agent-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dog-agent
+  template:
+    metadata:
+      labels:
+        app: dog-agent
+    spec:
+      containers:
+        - name: dog-agent
+          image: dog-agent:v1     # built locally, then `kind load docker-image dog-agent:v1 --name dograg`
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: RAG_URL
+              value: "http://dograg-web-svc:80"          # in-cluster DNS name of the RAG Service
+            - name: OLLAMA_HOST
+              value: "http://host.docker.internal:11434" # Ollama on the Mac (Docker Desktop host alias)
+            - name: AGENT_MODEL
+              value: "llama3.2"
+            - name: RAG_TIMEOUT_S
+              value: "120"
+            # BREEDS_CSV is baked into the image (/srv/data/dog_breeds.csv)
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"   # no torch/embeddings here; pandas + langchain fit easily
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            failureThreshold: 3

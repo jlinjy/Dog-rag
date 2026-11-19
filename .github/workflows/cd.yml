@@ -1,0 +1,7 @@
+name: CD
+on: [workflow_dispatch]
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "TODO - build/push images and apply deploy/k8s"

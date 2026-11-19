@@ -1,0 +1,56 @@
+name: dog-rag   # keep project name so the existing pgdata volume is reused
+services:
+   rag:
+      build: ../../services/rag
+      ports:
+         - "80:80" # match port running in container
+      environment:
+         - DB_HOST=postgres
+         - DB_PORT=5432
+         - DB_NAME=${DB_NAME}
+         - DB_USER=${DB_USER}
+         - DB_PASSWORD=${DB_PASSWORD}
+         - OLLAMA_HOST=http://host.docker.internal:11434
+      extra_hosts:
+         - "host.docker.internal:host-gateway"
+      depends_on:
+         postgres:
+            condition: service_healthy
+   agent:
+      build:
+         context: ../..
+         dockerfile: services/agent/Dockerfile
+      ports:
+         - "8080:80"
+      environment:
+         - RAG_URL=http://rag:80
+         - OLLAMA_HOST=http://host.docker.internal:11434
+      extra_hosts:
+         - "host.docker.internal:host-gateway"
+      depends_on:
+         - rag
+   postgres:
+      image: pgvector/pgvector:pg17
+      environment:
+         - POSTGRES_DB=${DB_NAME}
+         - POSTGRES_USER=${DB_USER}
+         - POSTGRES_PASSWORD=${DB_PASSWORD}
+      volumes:
+         - pgdata:/var/lib/postgresql/data
+         - ./init.sql:/docker-entrypoint-initdb.d/init.sql   # <-- runs on first init
+      healthcheck:
+         test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      ports:
+         - "5432:5432" # reachable from host too
+   prometheus:
+      image: prom/prometheus:latest
+      ports:
+         - "9090:9090"
+      volumes:
+         - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      depends_on:
+         - rag
+volumes:
+   pgdata:
+   
+

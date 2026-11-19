@@ -1,0 +1,13 @@
+# kind create cluster --config deploy/kind/cluster.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: dograg
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.36.1
+    extraPortMappings:
+      # Mac localhost:80 -> node port 30080 -> Envoy gateway (see gateway/envoyproxy.yaml)
+      - containerPort: 30080
+        hostPort: 80
+        listenAddress: "127.0.0.1"   # local machine only
+        protocol: TCP

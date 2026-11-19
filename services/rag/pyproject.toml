@@ -1,0 +1,29 @@
+[project]
+name = "dog-rag"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "prometheus-client",
+    "prometheus-fastapi-instrumentator",
+    "psycopg2-binary",
+    "pgvector",
+    "sentence-transformers",
+    "torch",
+    "ollama",
+    "python-dotenv",
+    # ingest
+    "pandas",
+    "wikipedia-api",
+]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

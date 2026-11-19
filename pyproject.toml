@@ -1,0 +1,25 @@
+[project]
+name = "dog-agent"
+version = "0.1.0"
+requires-python = ">=3.11"
+# Root deps = what the evals/ harness needs on top of the services.
+dependencies = [
+    "ollama",
+]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["services/rag", "services/agent"]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

@@ -1,0 +1,16 @@
+{"id": "a1", "question": "Which dog breeds come from Germany?", "expected_tool": "breed_database"}
+{"id": "a2", "question": "Which breeds commonly have hip dysplasia?", "expected_tool": "breed_database"}
+{"id": "a3", "question": "What breeds are known for being loyal?", "expected_tool": "breed_database"}
+{"id": "a4", "question": "How many breeds come from England?", "expected_tool": "breed_database"}
+{"id": "a5", "question": "How long does a beagle live?", "expected_tool": "breed_database"}
+{"id": "a6", "question": "What is the tallest breed?", "expected_tool": "breed_database"}
+{"id": "a7", "question": "What colour eyes does a Weimaraner have?", "expected_tool": "breed_database"}
+{"id": "a8", "question": "Compare the height and lifespan of a maltese and a pomeranian", "expected_tool": "breed_database"}
+{"id": "a9", "question": "Which breed lives the longest?", "expected_tool": "breed_database"}
+{"id": "a10", "question": "Why are German Shepherds used as police dogs?", "expected_tool": "breed_articles"}
+{"id": "a11", "question": "What was the Dalmatian originally bred for?", "expected_tool": "breed_articles"}
+{"id": "a12", "question": "Is a golden retriever good with kids?", "expected_tool": "breed_articles"}
+{"id": "a13", "question": "What is the history of the Siberian Husky?", "expected_tool": "breed_articles"}
+{"id": "a14", "question": "How much exercise does a border collie need?", "expected_tool": "breed_articles"}
+{"id": "a15", "question": "What was the Saint Bernard famous for in the Alps?", "expected_tool": "breed_articles"}
+{"id": "a16", "question": "How should I groom a poodle?", "expected_tool": "breed_articles"}

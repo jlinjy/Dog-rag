@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dog-agent-svc
+spec:
+  selector:
+    app: dog-agent   # matches pod label in agent/deployment.yaml
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP    # internal-only; reach it with kubectl port-forward

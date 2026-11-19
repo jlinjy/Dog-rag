@@ -1,0 +1,5 @@
+*
+!services/agent/requirements.txt
+!services/agent/app
+!services/rag/data/dog_breeds.csv
+**/__pycache__

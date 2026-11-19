@@ -8,13 +8,13 @@ __pycache__/
 *.pyc
 
 # data
-corpus/
+services/rag/data/corpus/
 
 #local stuff
 *.log
 .DS_Store
 .vscode/
 
-# To push later
-deployment.yaml
-decisions.md
+# personal notes
+docs/decisions.md
+.pytest_cache/
