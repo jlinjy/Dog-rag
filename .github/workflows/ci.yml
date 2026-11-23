@@ -2,8 +2,11 @@ name: Test Dog-RAG
 run-name: ${{github.actor}} testing github actions with dog RAG
 on: [push]
 jobs:
-  test-and-build:
+  rag:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/rag
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

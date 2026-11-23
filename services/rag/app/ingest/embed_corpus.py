@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import psycopg2
 from pgvector.psycopg2 import register_vector
 from sentence_transformers import SentenceTransformer
-from text_utils import chunk_text, clean_article
+from app.ingest.text_utils import chunk_text, clean_article
 
 # --- config ---
 # DB_HOST = "localhost"
@@ -21,7 +21,7 @@ DB_NAME = os.environ["DB_NAME"]
 DB_USER = os.environ["DB_USER"]
 DB_PASSWORD = os.environ["DB_PASSWORD"]
 
-CORPUS_DIR = Path("corpus")
+CORPUS_DIR = Path(__file__).resolve().parents[2] / "data" / "corpus"
 MODEL_NAME = "all-MiniLM-L6-v2"
 CHUNK_SIZE = 200
 CHUNK_OVERLAP = 40

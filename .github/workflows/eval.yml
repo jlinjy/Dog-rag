@@ -1,0 +1,7 @@
+name: Eval
+on: [workflow_dispatch]
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "TODO - run evals/retrieval and evals/agent, publish to evals/reports"

@@ -82,29 +82,28 @@ Evaluation is split into two independently-measured stages so failures can be lo
 > Prerequisites: Docker, Docker Compose, and [Ollama](https://ollama.com) running with a model pulled (e.g. `ollama pull llama3.2`).
 
 ```bash
-# 1. start Postgres (pgvector), the app, and Prometheus
-docker compose up -d --build
+# 1. start Postgres (pgvector), the RAG service, and Prometheus
+docker compose -f deploy/compose/docker-compose.yml --env-file .env up -d --build
 
-# 2. build the corpus (fetch breed articles)
-python scrape_corpus.py
+# 2. build the corpus (fetch breed articles) and embed into pgvector
+cd services/rag
+python -m app.ingest.scrape_corpus
+python -m app.ingest.embed_corpus
 
-# 3. chunk and embed into pgvector
-python embed_corpus.py
-
-# 4. query the API
-#    open http://localhost:8000/docs  and call /ask
+# 3. query the API
+#    open http://localhost/docs  and call /ask
 ```
 
-Run the evaluation harness:
+Run the evaluation harness (from the repo root):
 
 ```bash
-python eval.py
+PYTHONPATH=services/rag python -m evals.retrieval.run
 ```
 
 Run the tests:
 
 ```bash
-pytest -v
+cd services/rag && pytest -v
 ```
 
 ---
@@ -112,17 +111,30 @@ pytest -v
 ## Project structure
 
 ```
-scrape_corpus.py     # scrape breed articles into a local corpus
-embed_corpus.py     # chunk, embed, and load into pgvector
-text_utils.py       # pure text-processing functions (chunking, cleaning)
-app/rag.py              # retrieval + generation logic, query decomposition
-app/main.py             # FastAPI app (/ask, /health, /metrics)
-app/eval.py             # evaluation harness (retrieval recall + LLM-as-judge)
-eval_questions.json # evaluation set (13 questions, 5 types)
-Dockerfile
-docker-compose.yml
-deployment.yaml                # Kubernetes deployment + service manifests
-.github/workflows/  # CI pipeline
+services/
+  rag/                         # RAG service (API: /ask, /health, /metrics)
+    app/
+      api.py                   # FastAPI app
+      retrieval.py             # embedder, DB connection, pgvector search
+      decomposition.py         # multi-breed query decomposition
+      generation.py            # prompt building + LLM generation
+      ingest/                  # scrape_corpus, embed_corpus, text_utils
+    data/                      # dog_breeds.csv, corpus/ (gitignored)
+    scripts/                   # ad-hoc sanity scripts
+    tests/
+    Dockerfile
+  agent/                       # agent service (scaffold, WIP)
+evals/
+  datasets/                    # retrieval.jsonl, agent.jsonl
+  retrieval/                   # retrieval + LLM-as-judge harness
+  agent/                       # agent evals (WIP)
+  reports/
+deploy/
+  compose/                     # docker-compose.yml, init.sql, prometheus.yml
+  k8s/                         # rag/, agent/, postgres/, kustomization.yaml
+.github/workflows/             # ci.yml, eval.yml, cd.yml
+docs/adr/                      # architecture decision records
+pyproject.toml                 # uv workspace
 ```
 
 

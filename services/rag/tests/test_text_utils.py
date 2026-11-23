@@ -1,4 +1,4 @@
-from text_utils import chunk_text, clean_article
+from app.ingest.text_utils import chunk_text, clean_article
 
 def test_chunk_text_splits():
     text = " ".join(["word"] * 500)

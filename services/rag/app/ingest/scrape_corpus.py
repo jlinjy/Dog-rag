@@ -5,12 +5,12 @@ Setup (once):
     pip install wikipedia-api pandas
 
 Run:
-    python scrape_corpus.py
+    python -m app.ingest.scrape_corpus  (from services/rag)
 
 Output:
-    corpus/<breed_slug>.txt      one cleaned article per breed
-    corpus/_manifest.csv         what succeeded/failed + resolved title
-    corpus/_sources.md           provenance note (license, date)
+    data/corpus/<breed_slug>.txt      one cleaned article per breed
+    data/corpus/_manifest.csv         what succeeded/failed + resolved title
+    data/corpus/_sources.md           provenance note (license, date)
 """
 
 import csv
@@ -24,9 +24,10 @@ import pandas as pd
 import wikipediaapi
 
 # ---- config ----
-CSV_PATH = "dog_breeds.csv"      # your Kaggle file
+DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+CSV_PATH = DATA_DIR / "dog_breeds.csv"      # your Kaggle file
 BREED_COLUMN = "Breed"          # 1st column, per your note
-OUT_DIR = Path("corpus")
+OUT_DIR = DATA_DIR / "corpus"
 REQUEST_DELAY = 0.3              # polite pause between fetches (seconds)
 # Wikipedia asks for a descriptive User-Agent identifying your project/contact.
 USER_AGENT = "DogBreedRAG/1.0 (personal learning project; jlinjyy@gmail.com)"

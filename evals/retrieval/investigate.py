@@ -1,5 +1,6 @@
-# from rag import retrieve
-from rag import embedder, conn   # reuse your existing model + connection
+# Run from repo root: PYTHONPATH=services/rag python -m evals.retrieval.investigate
+# from app.retrieval import retrieve
+from app.retrieval import embedder, conn   # reuse your existing model + connection
 from pgvector.psycopg2 import register_vector
 
 # for breed, content in retrieve("pomeranian", k=4):

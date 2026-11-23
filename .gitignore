@@ -8,7 +8,7 @@ __pycache__/
 *.pyc
 
 # data
-corpus/
+services/rag/data/corpus/
 
 #local stuff
 *.log
@@ -16,5 +16,6 @@ corpus/
 .vscode/
 
 # To push later
-deployment.yaml
-decisions.md
+deploy/k8s/rag/deployment.yaml
+docs/decisions.md
+.pytest_cache/

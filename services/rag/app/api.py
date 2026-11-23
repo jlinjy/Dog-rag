@@ -3,7 +3,10 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from prometheus_client import Histogram
 import logging
 import time
-from rag import answer, retrieve, generate
+from app.retrieval import retrieve
+from app.generation import generate
+from app.decomposition import query_decomposition
+
 
 app = FastAPI()
 
@@ -22,7 +25,7 @@ def read_root():
 @app.post("/ask")
 def ask(user_query: str):
     t0 = time.time()
-    chunks = retrieve(user_query)
+    chunks = query_decomposition(user_query)
     RETRIEVAL_TIME.observe(time.time()-t0)
 
     t1 = time.time()

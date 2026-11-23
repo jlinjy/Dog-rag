@@ -1,8 +1,17 @@
+"""Retrieval + generation eval for the RAG service.
+
+Run from the repo root:
+    PYTHONPATH=services/rag python -m evals.retrieval.run
+"""
 import json
 import os
-from rag import query_decomposition, build_prompt, LLM_MODEL
+from pathlib import Path
+from app.decomposition import query_decomposition
+from app.generation import build_prompt, LLM_MODEL
 from ollama import Client
-from eval_llm import llm_judge
+from evals.retrieval.judge import llm_judge
+
+DATASET = Path(__file__).resolve().parents[1] / "datasets" / "retrieval.jsonl"
 
 ollama_client = Client(host=os.environ.get("OLLAMA-HOST", "http://localhost:11434"))
 
@@ -26,7 +35,8 @@ def eval_facts(key_facts, answer_text):
     return hits / len(key_facts)
 
 def run_eval(path, k=4):
-    questions = json.load(open(path))
+    with open(path) as f:
+        questions = [json.loads(line) for line in f if line.strip()]
     results = []
 
     for q in questions:
@@ -62,4 +72,4 @@ def run_eval(path, k=4):
 if __name__ == "__main__":
     #for k in (4, 10):
     #    print(f"\n===== top_k={k} =====")
-    print(run_eval(path="eval_questions.json",k=4))
+    print(run_eval(path=DATASET, k=4))

@@ -1,6 +1,7 @@
+name: dog-rag   # keep project name so the existing pgdata volume is reused
 services:
-   web: 
-      build: .
+   rag:
+      build: ../../services/rag
       ports:
          - "80:80" # match port running in container
       environment:
@@ -35,7 +36,7 @@ services:
       volumes:
          - ./prometheus.yml:/etc/prometheus/prometheus.yml
       depends_on:
-         - web
+         - rag
 volumes:
    pgdata:
    
