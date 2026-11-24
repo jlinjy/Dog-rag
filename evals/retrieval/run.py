@@ -1,19 +1,20 @@
 """Retrieval + generation eval for the RAG service.
 
 Run from the repo root:
-    PYTHONPATH=services/rag python -m evals.retrieval.run
+    PYTHONPATH=services/rag python -m evals.retrieval.run [k]
 """
 import json
 import os
+from datetime import datetime
 from pathlib import Path
 from app.decomposition import query_decomposition
-from app.generation import build_prompt, LLM_MODEL
+from app.generation import generate, LLM_MODEL
 from ollama import Client
 from evals.retrieval.judge import llm_judge
 
 DATASET = Path(__file__).resolve().parents[1] / "datasets" / "retrieval.jsonl"
 
-ollama_client = Client(host=os.environ.get("OLLAMA-HOST", "http://localhost:11434"))
+# ollama_client = Client(host=os.environ.get("OLLAMA-HOST", "http://localhost:11434"))
 
 def eval_retrieval(expected_breeds, retrieved_breeds):
     """
@@ -46,19 +47,16 @@ def run_eval(path, k=4):
         r_score = eval_retrieval(q["expected_breeds"], retrieved)
 
         # --- generation ---
-        prompt = build_prompt(q["question"], chunks)
-        resp = ollama_client.chat(model=LLM_MODEL,
-                                messages=[{
-                                'role': 'user',
-                                'content': prompt,
-                                }])
-        answer_text = resp["message"]["content"]
+        answer_text = generate(q["question"], chunks)   # same call/options as the service
         f_score = eval_facts(q["key_facts"], answer_text)
 
-        llm_score, llm_reason = llm_judge(q, answer_text, q["key_facts"])
+        llm_score, llm_reason = llm_judge(q["question"], answer_text, q["key_facts"])
         #print(llm_score)
 
         results.append({"id": q["id"], "type": q["type"],
+                        "question": q["question"],
+                        "answer": answer_text,
+                        "key_facts": q["key_facts"],
                         "retrieval": r_score, "facts": f_score,
                         "expected": q["expected_breeds"], "retrieved": retrieved,
                         "llm_eval_score": llm_score,  
@@ -69,7 +67,33 @@ def run_eval(path, k=4):
         #print(f"Expected breeds: {q["expected_breeds"]}, retrieved: {retrieved}")
     return results
 
+REPORTS_DIR = Path(__file__).resolve().parents[1] / "reports"
+
+def _mean(results, key):
+    vals = [r[key] for r in results if r[key] is not None]
+    return sum(vals) / len(vals) if vals else None
+
+def write_report(results, k):
+    """Save summary + per-question results (including the LLM answer) to a .txt file."""
+    summary = {
+        "n": len(results),
+        "top_k": k,
+        "model": LLM_MODEL,
+        "retrieval_recall": _mean(results, "retrieval"),
+        "fact_substring": _mean(results, "facts"),
+        "llm_judge": _mean(results, "llm_eval_score"),
+    }
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    path = REPORTS_DIR / f"rag_only_{datetime.now():%Y%m%d_%H%M%S}.txt"
+    path.write_text(json.dumps({"summary": summary, "results": results},
+                               indent=2, ensure_ascii=False))
+    return path
+
 if __name__ == "__main__":
     #for k in (4, 10):
     #    print(f"\n===== top_k={k} =====")
-    print(run_eval(path=DATASET, k=4))
+    import sys
+    k = int(sys.argv[1]) if len(sys.argv) > 1 else 4
+    results = run_eval(path=DATASET, k=k)
+    print(json.dumps(results, indent=2, ensure_ascii=False))
+    print(f"Report written to {write_report(results, k)}")

@@ -21,11 +21,17 @@ conn = psycopg2.connect(
     )
 register_vector(conn)
 
-def retrieve(query: str, k: int = TOP_K):
-  """ Return top k most similar chunks as query"""
+def retrieve(query: str, k: int = TOP_K, breed: str | None = None):
+  """ Return top k most similar chunks as query (optionally only from one breed)"""
   qv = embedder.encode(query)
   cur = conn.cursor()
-  cur.execute("SELECT breed, content FROM chunks ORDER BY embedding <=> %s LIMIT %s",
-              (qv, k),
-              )
+  if breed is None:
+    cur.execute("SELECT breed, content FROM chunks ORDER BY embedding <=> %s LIMIT %s",
+                (qv, k),
+                )
+  else:
+    cur.execute("SELECT breed, content FROM chunks WHERE breed = %s "
+                "ORDER BY embedding <=> %s LIMIT %s",
+                (breed, qv, k),
+                )
   return cur.fetchall()

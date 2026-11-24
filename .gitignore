@@ -19,3 +19,4 @@ services/rag/data/corpus/
 deploy/k8s/rag/deployment.yaml
 docs/decisions.md
 .pytest_cache/
+evals/reports/

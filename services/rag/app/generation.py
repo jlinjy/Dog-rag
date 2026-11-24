@@ -32,7 +32,8 @@ def generate(query, chunks):
       'role': 'user',
       'content': prompt,
     },
-  ])
+  ], 
+  options={"temperature": 0.1})
   return response['message']['content']
 
 
