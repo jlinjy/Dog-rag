@@ -10,9 +10,10 @@ from pathlib import Path
 from app.decomposition import query_decomposition
 from app.generation import generate, LLM_MODEL
 from ollama import Client
-from evals.retrieval.judge import llm_judge
+from evals.retrieval.judge import llm_judge, flags_outside_knowledge
 
 DATASET = Path(__file__).resolve().parents[1] / "datasets" / "retrieval.jsonl"
+REPORTS_DIR = Path(__file__).resolve().parents[1] / "reports"
 
 # ollama_client = Client(host=os.environ.get("OLLAMA-HOST", "http://localhost:11434"))
 
@@ -51,6 +52,7 @@ def run_eval(path, k=4):
         f_score = eval_facts(q["key_facts"], answer_text)
 
         llm_score, llm_reason = llm_judge(q["question"], answer_text, q["key_facts"])
+        outside = flags_outside_knowledge(answer_text)
         #print(llm_score)
 
         results.append({"id": q["id"], "type": q["type"],
@@ -61,6 +63,7 @@ def run_eval(path, k=4):
                         "expected": q["expected_breeds"], "retrieved": retrieved,
                         "llm_eval_score": llm_score,  
                         "llm_eval_reason": llm_reason, 
+                        "outside_knowledge": outside,
                         })
         #print(f"[{q["id"]}] {q["type"]} retrieval={r_score}, facts={f_score}")
         # print(f"answer_text: {answer_text}")
@@ -82,6 +85,7 @@ def write_report(results, k):
         "retrieval_recall": _mean(results, "retrieval"),
         "fact_substring": _mean(results, "facts"),
         "llm_judge": _mean(results, "llm_eval_score"),
+        "outside_knowledge_count": sum(r["outside_knowledge"] for r in results),
     }
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     path = REPORTS_DIR / f"rag_only_{datetime.now():%Y%m%d_%H%M%S}.txt"

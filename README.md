@@ -30,7 +30,7 @@ The focus of this project is **the engineering around the model, not the model i
 ## Key features
 
 - **End-to-end RAG pipeline** — 103 Wikipedia dog-breed articles scraped (`wikipedia-api`), chunked, embedded with `sentence-transformers` (all-MiniLM-L6-v2), and stored in **pgvector**; retrieval + LLM generation (**Ollama**, local) served behind a **FastAPI** application.
-- **Custom evaluation harness** — measures **retrieval recall and generation quality separately** across 13 questions spanning 5 question types (factual, multi-hop, disambiguation, conditional, grounding).
+- **Custom evaluation harness** — measures **retrieval recall and generation quality separately** across 14 questions (multi-hop, aggregation, disambiguation, conditional, grounding, plus factual controls).
 - **Query decomposition** for multi-hop comparison questions — detects multiple entities in a query, retrieves per-entity, and merges the context so each entity is represented.
 - **LLM-as-judge evaluation** — upgraded from substring fact-matching to semantic judging, with prompt calibration to correct judge bias.
 - **Containerised and orchestrated** — Docker Compose for local development; deployed to a **Kubernetes** (kind) cluster with health/readiness probes and resource limits.
@@ -62,7 +62,23 @@ Evaluation is split into two independently-measured stages so failures can be lo
 - **Retrieval recall** — of the documents that *should* be retrieved for a question, how many were. Improved from **83% → 100%** on the breed-specific question set after fixing a vector-index bug (see below).
 - **Generation quality** — whether the answer conveys the expected facts, scored first by substring matching and later by an LLM-as-judge.
 
-> Note: the evaluation set is deliberately small (13 questions) and spans 5 question types for coverage; results are treated as directional, and growing the set and validating the judge against human labels are the natural next steps.
+Latest run (2026-11-24, `top_k=4`; generation: llama3.2 at temperature 0.1; judge: qwen2.5:7b at temperature 0):
+
+| Metric | Score |
+|---|---|
+| Retrieval recall (10 questions with expected breeds) | **100%** |
+| LLM-as-judge (mean fraction of key facts conveyed, 13 questions) | **0.69** |
+| Fact substring match (mean) | 0.61 |
+| Answers using outside / "general knowledge" | 0 of 14 |
+
+**How the judge scores.** Each question has a short list of key facts. The judge returns a yes/no verdict per fact, each backed by a short quote from the answer, and the score is computed in code as the fraction of "yes". It cannot invent its own criteria, and "not enough information" answers score 0 on the facts they don't cover. This replaced a single holistic score that echoed the fact list back (it once credited "hypoallergenic" to an answer that never mentioned it) and scored refusals 1.0. Each answer is also checked for phrases like "based on general knowledge" that signal it stepped outside the retrieved context.
+
+**Where it falls short:**
+- *Generation, not retrieval, is now the bottleneck.* After query decomposition was changed to search each breed with the rest of the question (e.g. "siberian husky … hot climate" rather than just "siberian husky"), the relevant chunks are retrieved for all comparison questions — but llama3.2 doesn't always use them (Labrador vs. Golden tail differences are retrieved but not mentioned).
+- *Key facts check topics, not conclusions.* For "Which is better suited to a hot climate, a Siberian Husky or a Chihuahua?" the model retrieves the right chunk but concludes the Husky — and still scores 0.5–1.0. Catching this needs an expected answer per question.
+- *The judge still misses some facts* written out verbatim (e.g. "Toy Poodle" in a list), so the judge and substring scores are best read together.
+
+> Note: the evaluation set is deliberately small (14 questions: 11 across 6 question types plus 3 controls); results are treated as directional, and growing the set and validating the judge against human labels are the natural next steps.
 
 ---
 
@@ -97,7 +113,9 @@ python -m app.ingest.embed_corpus
 Run the evaluation harness (from the repo root):
 
 ```bash
-PYTHONPATH=services/rag python -m evals.retrieval.run
+ollama pull qwen2.5:7b                                   # judge model
+PYTHONPATH=services/rag python -m evals.retrieval.run    # optional arg: top_k (default 4)
+# report written to evals/reports/rag_only_<timestamp>.txt
 ```
 
 Run the tests:

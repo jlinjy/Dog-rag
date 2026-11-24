@@ -1,4 +1,4 @@
-from ollama import chat, Client
+from ollama import Client
 import os
 import json
 import re
@@ -6,6 +6,20 @@ import re
 ollama_client = Client(host=os.environ.get("OLLAMA-HOST", "http://localhost:11434"))
 # DB_DSN = os.environ.get("DOG_DB", "host=localhost port=5432 dbname=dograg user=postgres password=postgres")
 LLM_MODEL = "qwen2.5:7b"
+
+# Phrases that signal the model stepped outside the retrieved context.
+OUTSIDE_KNOWLEDGE = re.compile(
+    r"general knowledge|common knowledge|outside (of )?the (context|sources)|"
+    r"not (mentioned|stated) in the (context|sources), (but|however)|"
+    r"based on my (own )?knowledge",
+    re.IGNORECASE,
+)
+
+
+def flags_outside_knowledge(answer):
+    """Deterministic check: does the answer admit to using non-context knowledge?"""
+    return bool(OUTSIDE_KNOWLEDGE.search(answer))
+
 
 def llm_judge(question, answer, key_facts):
     """Coverage: which of the listed key facts does the answer convey?
@@ -90,6 +104,33 @@ def parse_checklist(content, key_facts):
                        + (f" ({m.get('evidence')!r})" if m.get("evidence") else "")
                        for f, m in zip(key_facts, matched))
     return sum(m["present"] for m in matched) / len(key_facts), reason
+
+
+def grounding_judge(question, answer, chunks):
+    """Faithfulness: is every claim in the answer supported by the retrieved context?"""
+    context = "\n\n".join(f"[Source {i+1}: {b}] {c}" for i, (b, c) in enumerate(chunks))
+    prompt = f"""
+    You are checking whether an answer is grounded in the provided context.
+
+    --- CONTEXT ---
+    {context}
+
+    --- QUESTION ---
+    {question}
+
+    --- ANSWER ---
+    {answer}
+
+    List each factual claim in the answer and check whether the CONTEXT supports it.
+    Claims drawn from general knowledge count as UNSUPPORTED, even if they are true.
+    Saying "the context does not contain this" is not a claim.
+
+    Score = fraction of claims supported by the context (1.0 if all are, 0.0 if none are).
+
+    Respond with ONLY this JSON {{"score": <0.0-1.0>, "reason": "<brief, name any unsupported claims>"}} """
+
+    resp = ollama_client.chat(model=LLM_MODEL, messages=[{"role": "user", "content": prompt}])
+    return parse_judge(resp.message.content)
 
 
 def parse_judge(content):
