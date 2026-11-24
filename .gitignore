@@ -18,3 +18,4 @@ corpus/
 # To push later
 deployment.yaml
 decisions.md
+evals/reports/
