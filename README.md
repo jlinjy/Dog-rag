@@ -105,6 +105,7 @@ docker compose -f deploy/compose/docker-compose.yml --env-file .env up -d --buil
 cd services/rag
 python -m app.ingest.scrape_corpus
 python -m app.ingest.embed_corpus
+python -m app.ingest.load_dog_breeds   # dog_breeds.csv -> dog_breeds table (merges duplicate breeds)
 
 # 3. query the API
 #    open http://localhost/docs  and call /ask
@@ -136,7 +137,7 @@ services/
       retrieval.py             # embedder, DB connection, pgvector search
       decomposition.py         # multi-breed query decomposition
       generation.py            # prompt building + LLM generation
-      ingest/                  # scrape_corpus, embed_corpus, text_utils
+      ingest/                  # scrape_corpus, embed_corpus, load_dog_breeds, text_utils
     data/                      # dog_breeds.csv, corpus/ (gitignored)
     scripts/                   # ad-hoc sanity scripts
     tests/

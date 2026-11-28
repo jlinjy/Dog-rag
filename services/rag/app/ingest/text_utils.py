@@ -1,4 +1,13 @@
 import re
+import unicodedata
+
+def slugify(name: str) -> str:
+    """Make a safe filename / id from a breed name, e.g. "Golden Retriever" -> "golden_retriever".
+    Corpus files (and so chunks.breed) and dog_breeds.slug both use this."""
+    name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    name = re.sub(r"[^\w\s-]", "", name).strip().lower()
+    return re.sub(r"[\s-]+", "_", name) or "unknown"
+
 
 STOP_SECTIONS = ["References", "See also", "External links", "Notes", "Citations"]
 

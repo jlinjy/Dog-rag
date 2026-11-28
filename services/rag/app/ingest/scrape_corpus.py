@@ -23,6 +23,8 @@ from pathlib import Path
 import pandas as pd
 import wikipediaapi
 
+from app.ingest.text_utils import slugify
+
 # ---- config ----
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 CSV_PATH = DATA_DIR / "dog_breeds.csv"      # your Kaggle file
@@ -51,13 +53,6 @@ TITLE_OVERRIDES = {
     "Samoyed": "Samoyed dog",
     # "CSV name": "Correct Wikipedia Title",
 }
-
-
-def slugify(name: str) -> str:
-    """Make a safe filename from a breed name."""
-    name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
-    name = re.sub(r"[^\w\s-]", "", name).strip().lower()
-    return re.sub(r"[\s-]+", "_", name) or "unknown"
 
 
 def load_breeds(csv_path: str, column: str) -> list[str]:
